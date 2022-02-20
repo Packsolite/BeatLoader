@@ -134,7 +134,7 @@ public class BeatSaverUtil {
 		InputStream in;
 	}
 
-	public static void downloadSong(Song song, boolean replaceIfExist) throws IOException {
+	public static void downloadSong(Song song, boolean replaceIfExist) throws IOException, InterruptedException {
 		String key = getKeyByHash(song.getId());
 		final String fileNameRegex = "[^A-Za-z0-9!+-., ]";
 		String dirName = key + " (" + song.getName()
@@ -152,6 +152,7 @@ public class BeatSaverUtil {
 				System.out.println("Continue download...");
 			} else {
 				System.out.println("Song files already downloaded... Skipping");
+				Thread.sleep(500);
 				return;
 			}
 		}

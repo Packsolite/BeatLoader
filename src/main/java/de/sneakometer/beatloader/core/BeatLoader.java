@@ -79,7 +79,7 @@ public class BeatLoader {
 				updateStatus("Downloading " + song.getName() + " - " + song.getSongAuthorName() + "...");
 				try {
 					BeatSaverUtil.downloadSong(song, redownloadAll);
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 					System.out.println("Could not download song: " + ex.getMessage());
 				}
 			}
