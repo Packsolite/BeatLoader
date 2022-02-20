@@ -1,0 +1,31 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.settings/
+.classpath
+.factorypath
+.project
+.vscode/
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
