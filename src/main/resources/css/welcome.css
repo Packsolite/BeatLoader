@@ -1,0 +1,27 @@
+/* https://material.io/design/color/dark-theme.html#ui-application */
+.root {
+	-fx-background-color: #121212;
+	-fx-font-family: "Segoe UI Variable";
+}
+
+.label {
+	-fx-font-size: 24.0;
+	-fx-text-fill: "white";
+	-fx-opacity: 85.0%;
+	-fx-alignment: center;
+}
+
+#title {
+	-fx-font-size: 32.0;
+	-fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-radius: 0.0;
+    -fx-background-color: "white";
+    -fx-font-size: 20.0;
+}
+
+.button:hover {
+	-fx-background-color: "lightgray";
+}
