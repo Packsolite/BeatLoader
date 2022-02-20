@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.sneakometer</groupId>
 	<artifactId>beatloader</artifactId>
-	<name>BeatLoader</name>
+	<name>Beat Loader</name>
 	<description>A Beat Saber Song Downloader for Desktop.</description>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -121,7 +121,7 @@
 							<outfile>target/${project.artifactId}-${project.version}.exe</outfile>
 							<jar>target/${project.artifactId}-${project.version}.jar</jar>
 							<icon>src/main/resources/icon/icon.ico</icon>
-							<errTitle>enccg</errTitle>
+							<errTitle>${project.name}</errTitle>
 							<classPath>
 								<mainClass>${main.package}.Launcher</mainClass>
 							</classPath>
