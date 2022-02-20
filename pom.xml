@@ -13,6 +13,7 @@
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.22</lombok.version>
+		<main.package>de.sneakometer.beatloader.main</main.package>
 	</properties>
 
 	<dependencies>
@@ -25,7 +26,12 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>17.0.1</version>
+			<version>17.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>17.0.2</version>
 		</dependency>
 		<!-- Test Dependencies -->
 		<dependency>
@@ -74,7 +80,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.8</version>
 				<configuration>
-					<mainClass>de.sneakometer.beatloader.Main</mainClass>
+					<mainClass>${main.package}.Main</mainClass>
 				</configuration>
 			</plugin>
 			<!-- Shade dependencies into Jar-->
@@ -87,6 +93,13 @@
 						<goals>
 							<goal>shade</goal>
 						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${main.package}.Launcher</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

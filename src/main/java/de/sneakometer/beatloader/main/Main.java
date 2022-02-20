@@ -1,11 +1,11 @@
-package de.sneakometer.beatloader;
+package de.sneakometer.beatloader.main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		launch(args);
 	}
 
