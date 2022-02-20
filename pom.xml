@@ -14,6 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.22</lombok.version>
 		<main.package>de.sneakometer.beatloader.main</main.package>
+		<executable.version>0.0.0.1</executable.version>
 	</properties>
 
 	<dependencies>
@@ -99,6 +100,45 @@
 									<mainClass>${main.package}.Launcher</mainClass>
 								</transformer>
 							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Create Standalone executable using Launcher4J -->
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>2.1.1</version>
+				<executions>
+					<execution>
+						<id>l4j-gui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
+							<outfile>target/beatloader-${project.version}.exe</outfile>
+							<jar>target/${project.artifactId}-${project.version}.jar</jar>
+							<icon>src/main/resources/icon.ico</icon>
+							<errTitle>enccg</errTitle>
+							<classPath>
+								<mainClass>${main.package}.Launcher</mainClass>
+							</classPath>
+							<jre>
+								<minVersion>17</minVersion>
+							</jre>
+							<versionInfo>
+								<fileVersion>${executable.version}</fileVersion>
+								<txtFileVersion>${executable.version}</txtFileVersion>
+								<fileDescription>${project.description}</fileDescription>
+								<copyright>MIT</copyright>
+								<productVersion>${executable.version}</productVersion>
+								<txtProductVersion>${executable.version}</txtProductVersion>
+								<productName>${project.name}</productName>
+								<internalName>${project.artifactId</internalName>
+								<originalFilename>original.exe</originalFilename>
+							</versionInfo>
 						</configuration>
 					</execution>
 				</executions>
