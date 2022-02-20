@@ -74,9 +74,11 @@ public class BeatLoader {
 	}
 
 	static void downloadSongs(Collection<Song> songs, PlayerData playerData, boolean redownloadAll) {
+		int i = 0;
 		for (Song song : songs) {
+			i++;
 			if (!playerData.hasDownloadedSong(song)) {
-				updateStatus("Downloading " + song.getName() + " - " + song.getSongAuthorName() + "...");
+				updateStatus("(" + i + "/" + songs.size() + ") Downloading " + song.getName() + " - " + song.getSongAuthorName());
 				try {
 					BeatSaverUtil.downloadSong(song, redownloadAll);
 				} catch (Exception ex) {
