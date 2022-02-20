@@ -34,7 +34,7 @@ public class Main extends Application {
 		styles.add(mainStyle.toExternalForm());
 
 		/* Setup stage */
-		Image icon = new Image("icon.png");
+		Image icon = new Image("icon/icon.png");
 		ObservableList<Image> icons = stage.getIcons();
 		icons.add(icon);
 		stage.setTitle("BeatLoader");

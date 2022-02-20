@@ -120,7 +120,7 @@
 							<headerType>gui</headerType>
 							<outfile>target/${project.artifactId}-${project.version}.exe</outfile>
 							<jar>target/${project.artifactId}-${project.version}.jar</jar>
-							<icon>src/main/resources/icon.ico</icon>
+							<icon>src/main/resources/icon/icon.ico</icon>
 							<errTitle>enccg</errTitle>
 							<classPath>
 								<mainClass>${main.package}.Launcher</mainClass>
