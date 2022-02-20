@@ -37,7 +37,8 @@ public class Main extends Application {
 		Image icon = new Image("icon/icon.png");
 		ObservableList<Image> icons = stage.getIcons();
 		icons.add(icon);
-		stage.setTitle("BeatLoader");
+		stage.setResizable(false);
+		stage.setTitle("Beat Loader");
 		stage.setScene(scene);
 	}
 }

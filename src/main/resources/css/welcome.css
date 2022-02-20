@@ -5,10 +5,9 @@
 }
 
 .label {
-	-fx-font-size: 24.0;
+	-fx-font-size: 18.0;
 	-fx-text-fill: "white";
 	-fx-opacity: 85.0%;
-	-fx-alignment: center;
 }
 
 #title {
@@ -24,4 +23,14 @@
 
 .button:hover {
 	-fx-background-color: "lightgray";
+}
+
+.check-box {
+    -fx-text-fill: white;
+    -fx-opacity: 85.0%;
+}
+
+#statusLabel {
+	-fx-alignment: center;
+	-fx-font-size: 14.0;
 }
