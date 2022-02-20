@@ -118,7 +118,7 @@
 						</goals>
 						<configuration>
 							<headerType>gui</headerType>
-							<outfile>target/beatloader-${project.version}.exe</outfile>
+							<outfile>target/${project.artifactId}-${project.version}.exe</outfile>
 							<jar>target/${project.artifactId}-${project.version}.jar</jar>
 							<icon>src/main/resources/icon.ico</icon>
 							<errTitle>enccg</errTitle>
@@ -137,7 +137,7 @@
 								<txtProductVersion>${executable.version}</txtProductVersion>
 								<productName>${project.name}</productName>
 								<internalName>${project.artifactId</internalName>
-								<originalFilename>original.exe</originalFilename>
+								<originalFilename>${project.artifactId}-${project.version}.exe</originalFilename>
 							</versionInfo>
 						</configuration>
 					</execution>
