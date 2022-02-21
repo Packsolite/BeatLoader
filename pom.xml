@@ -129,7 +129,7 @@
 						</goals>
 						<configuration>
 							<headerType>gui</headerType>
-							<outfile>target/${project.artifactId}-${project.version}.exe</outfile>
+							<outfile>target/${project.name}.exe</outfile>
 							<jar>target/${project.artifactId}-${project.version}.jar</jar>
 							<icon>src/main/resources/icon/icon.ico</icon>
 							<errTitle>${project.name}</errTitle>
