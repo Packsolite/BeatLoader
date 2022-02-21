@@ -11,8 +11,8 @@
    <children>
       <Pane layoutX="14.0" layoutY="6.0" prefHeight="72.0" prefWidth="458.0">
          <children>
-            <Slider fx:id="minStarsSlider" blockIncrement="1.0" layoutX="14.0" layoutY="40.0" majorTickUnit="1.0" max="20.0" minorTickCount="4" prefHeight="14.0" prefWidth="350.0" snapToTicks="true" />
-            <Label fx:id="minStarsLabel" layoutX="14.0" layoutY="14.0" text="Minimum Star Difficulty: 0" />
+            <Slider fx:id="minStarsSlider" blockIncrement="1.0" layoutX="14.0" layoutY="40.0" majorTickUnit="1.0" max="20.0" minorTickCount="4" prefHeight="14.0" prefWidth="350.0" snapToTicks="true" value="6.0" />
+            <Label fx:id="minStarsLabel" layoutX="14.0" layoutY="14.0" text="Minimum Star Difficulty: 6" />
          </children>
       </Pane>
       <Pane layoutX="14.0" layoutY="68.0" prefHeight="72.0" prefWidth="458.0">

@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.sneakometer</groupId>
 	<artifactId>beatloader</artifactId>
-	<name>BeatLoader</name>
+	<name>Beat Loader alpha</name>
 	<description>A Beat Saber Song Downloader for Desktop.</description>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<maven.compiler.target>17</maven.compiler.target>
-		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.22</lombok.version>
@@ -27,12 +27,12 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>17.0.2</version>
+			<version>11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>17.0.2</version>
+			<version>11</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -132,12 +132,12 @@
 							<outfile>target/${project.artifactId}-${project.version}.exe</outfile>
 							<jar>target/${project.artifactId}-${project.version}.jar</jar>
 							<icon>src/main/resources/icon/icon.ico</icon>
-							<errTitle>enccg</errTitle>
+							<errTitle>${project.name}</errTitle>
 							<classPath>
 								<mainClass>${main.package}.Launcher</mainClass>
 							</classPath>
 							<jre>
-								<minVersion>17</minVersion>
+								<minVersion>11</minVersion>
 							</jre>
 							<versionInfo>
 								<fileVersion>${executable.version}</fileVersion>
