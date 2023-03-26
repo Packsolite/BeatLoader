@@ -47,7 +47,7 @@ public class BeatLoader {
 		return CompletableFuture.supplyAsync(() -> {
 			TOTAL_DOWNLOADED = 0;
 			specifyGameDir();
-			Collection<Song> songs = ScoreSaberUtil.getRankedSongs(minStars);
+			Collection<Song> songs = ScoreSaberUtil.getRankedSongs(minStars, maxStars);
 
 			updateStatus("Found " + songs.size() + " songs");
 			BeatSaverUtil.deleteDoubles();
@@ -78,11 +78,12 @@ public class BeatLoader {
 		for (Song song : songs) {
 			i++;
 			if (!playerData.hasDownloadedSong(song)) {
-				updateStatus("(" + i + "/" + songs.size() + ") Downloading " + song.getName() + " - " + song.getSongAuthorName());
+				updateStatus("(" + i + "/" + songs.size() + ") Downloading " + song.getSongName() + " - " + song.getLevelAuthorName());
 				try {
 					BeatSaverUtil.downloadSong(song, redownloadAll);
 				} catch (Exception ex) {
 					System.out.println("Could not download song: " + ex.getMessage());
+					ex.printStackTrace();
 				}
 			}
 		}

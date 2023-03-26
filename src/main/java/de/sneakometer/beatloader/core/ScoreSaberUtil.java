@@ -1,25 +1,31 @@
 package de.sneakometer.beatloader.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gson.JsonArray;
 
 public class ScoreSaberUtil {
 
-	public static Collection<Song> getRankedSongs() {
-		return getRankedSongs(-1);
-	}
-
-	public static Collection<Song> getRankedSongs(double stars) {
+	public static Collection<Song> getRankedSongs(double minStars, double maxStars) {
 		LeaderboardRequest leaderboardRequest = new LeaderboardRequest();
 		LeaderboardParser leaderboardParser = new LeaderboardParser();
 		SongParser songParser = new SongParser();
-		SongFilter songFilter = new SongFilter();
 
-		String leaderboardJson = leaderboardRequest.getLeaderboardAsJsonString();
-		JsonArray songArray = leaderboardParser.parseLeaderboard(leaderboardJson);
-		Collection<Song> songs = songParser.parseSongs(songArray);
-		songFilter.filterRanked(songs, stars);
+		List<Song> songs = new ArrayList<>();
+
+		int pageNum = 1;
+		while (true) {
+			BeatLoader.updateStatus("Downloading leaderboard page " + pageNum);
+			String leaderboardJson = leaderboardRequest.getLeaderboardAsJsonString(minStars, maxStars, pageNum);
+			JsonArray songArray = leaderboardParser.parseLeaderboard(leaderboardJson);
+			Collection<Song> leaderBordPage = songParser.parseSongs(songArray);
+			if(leaderBordPage.isEmpty()) break;
+			songs.addAll(leaderBordPage);
+			pageNum++;
+		}
+
 		return songs;
 	}
 }

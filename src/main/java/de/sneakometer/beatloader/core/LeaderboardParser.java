@@ -8,7 +8,6 @@ public class LeaderboardParser {
 	public JsonArray parseLeaderboard(String json) {
 		JsonParser parser = new JsonParser();
 		JsonObject leaderboard = parser.parse(json).getAsJsonObject();
-		JsonArray songs = leaderboard.getAsJsonArray("songs");
-		return songs;
+		return leaderboard.getAsJsonArray("leaderboards");
 	}
 }

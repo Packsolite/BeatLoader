@@ -7,11 +7,11 @@ import java.net.URL;
 
 public class LeaderboardRequest {
 
-	public String getLeaderboardAsJsonString() {
+	public String getLeaderboardAsJsonString(double minStars, double maxStars, int page) {
 
 		try {
 			System.out.println("Send request to scoresaber...");
-			String url = "http://scoresaber.com/api.php?function=get-leaderboards&limit=2147483647&page=1";
+			String url = "https://scoresaber.com/api/leaderboards?ranked=true&minStar="+minStars+"&maxStar="+maxStars+"&sort=1&unique=true&withMetadata=false&page=" + page;
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");

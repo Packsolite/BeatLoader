@@ -41,7 +41,7 @@ public class PlaylistGenerator {
 			try {
 				PlaylistSong pls = new PlaylistSong();
 				pls.hash = song.getId();
-				pls.songName = song.getName();
+				pls.songName = song.getSongName();
 				pls.key = BeatSaverUtil.getKeyByHash(song.getId());
 				playlist.songs.add(pls);
 

@@ -27,7 +27,7 @@ public class BeatSaverUtil {
 		if (keyByHashCache.containsKey(hash)) {
 			return keyByHashCache.get(hash);
 		}
-		String url = "https://beatsaver.com/api/maps/hash/" + hash;
+		String url = "https://api.beatsaver.com/maps/hash/" + hash;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
@@ -50,16 +50,17 @@ public class BeatSaverUtil {
 		return key;
 	}
 
-	public static void downloadSongFiles(String songKey, File fileTo) throws IOException {
-		Stream is = getStream(songKey);
+	public static void downloadSongFiles(Song song, File fileTo) throws IOException {
+		Stream is = getStream(song);
+		System.out.println("song hash=" + song.getSongHash() + " id=" + song.id + " key=" + song.key);
 
 		if (is == null) {
-			System.out.println("Found no stream for " + songKey + " try again in 5 seconds");
+			System.out.println("Found no stream for " + song + " try again in 5 seconds");
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 			}
-			is = getStream(songKey);
+			is = getStream(song);
 			if (is == null) {
 				System.out.println("nah, just skipping");
 				return;
@@ -110,9 +111,9 @@ public class BeatSaverUtil {
 		System.out.println(downloadedmb + "/" + totalmb + "mb (" + percentage + "%)");
 	}
 
-	public static Stream getStream(String songKey) {
+	public static Stream getStream(Song song) {
 		try {
-			String url = "https://beatsaver.com/api/download/key/" + songKey;
+			String url = "https://beatsaver.com/api/download/key/" + song.key;
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
@@ -135,9 +136,9 @@ public class BeatSaverUtil {
 	}
 
 	public static void downloadSong(Song song, boolean replaceIfExist) throws IOException, InterruptedException {
-		String key = getKeyByHash(song.getId());
+		song.key = getKeyByHash(song.getSongHash());
 		final String fileNameRegex = "[^A-Za-z0-9!+-., ]";
-		String dirName = key + " (" + song.getName()
+		String dirName = song.key + " (" + song.getSongName()
 				.replaceAll(fileNameRegex, "") + " - "
 				+ song.getLevelAuthorName()
 						.replaceAll(fileNameRegex, "")
@@ -146,7 +147,7 @@ public class BeatSaverUtil {
 
 		if (path.exists()) {
 			if (replaceIfExist) {
-				System.out.println("Path found for " + song.getName() + ", delete...");
+				System.out.println("Path found for " + song.getSongName() + ", delete...");
 				deleteDirectory(path);
 				path.delete();
 				System.out.println("Continue download...");
@@ -156,12 +157,12 @@ public class BeatSaverUtil {
 				return;
 			}
 		}
-		deleteOldFiles(key);
+		deleteOldFiles(song.key);
 		path.mkdirs();
 		try {
-			downloadSongFiles(key, path);
+			downloadSongFiles(song, path);
 		} catch (IOException e) {
-			System.out.println("Could not download song " + song.getName() + ": " + e.getMessage());
+			System.out.println("Could not download song " + song.getSongName() + ": " + e.getMessage());
 		}
 	}
 

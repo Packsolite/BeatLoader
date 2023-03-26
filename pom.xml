@@ -8,11 +8,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<lombok.version>1.18.22</lombok.version>
 		<main.package>de.sneakometer.beatloader.main</main.package>
 		<executable.version>0.0.0.1</executable.version>
 	</properties>
@@ -21,65 +20,59 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
+			<version>1.18.26</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>11</version>
+			<version>19.0.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>11</version>
+			<version>19.0.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>31.0.1-jre</version>
+			<version>31.1-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.9.0</version>
+			<version>2.10.1</version>
 		</dependency>
 
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.8.2</version>
+			<version>5.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.8.2</version>
+			<version>5.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>4.2.0</version>
+			<version>5.2.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-plugin</artifactId>
-			<version>2.22.2</version>
+			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!-- Proper Lombok support -->
-			<plugin>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-maven-plugin</artifactId>
-				<version>${lombok.version}</version>
-			</plugin>
 			<!-- Run tests with JUnit-Jupiter -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -137,7 +130,7 @@
 								<mainClass>${main.package}.Launcher</mainClass>
 							</classPath>
 							<jre>
-								<minVersion>11</minVersion>
+								<minVersion>17</minVersion>
 							</jre>
 							<versionInfo>
 								<fileVersion>${executable.version}</fileVersion>
