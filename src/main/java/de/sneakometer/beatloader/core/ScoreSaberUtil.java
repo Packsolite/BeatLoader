@@ -2,13 +2,14 @@ package de.sneakometer.beatloader.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gson.JsonArray;
 
 public class ScoreSaberUtil {
 
-	public static Collection<Song> getRankedSongs(double minStars, double maxStars) {
+	public static List<Song> getRankedSongs(double minStars, double maxStars) {
 		LeaderboardRequest leaderboardRequest = new LeaderboardRequest();
 		LeaderboardParser leaderboardParser = new LeaderboardParser();
 		SongParser songParser = new SongParser();
@@ -26,6 +27,24 @@ public class ScoreSaberUtil {
 			pageNum++;
 		}
 
+		// elemninate doubles
+		Iterator<Song> itr = songs.iterator();
+		while (itr.hasNext()){
+			Song song = itr.next();
+			boolean isDouble = false;
+			for(Song otherSong : songs) {
+				if (song == otherSong) continue;
+				if(song.songHash.equalsIgnoreCase(otherSong.songHash)) {
+					System.out.println("Found double songs in leaderboard: ");
+					System.out.println(song.toString());
+					System.out.println(otherSong.toString());
+					isDouble = true;
+				}
+			}
+			if(isDouble){
+				itr.remove();
+			}
+		}
 		return songs;
 	}
 }

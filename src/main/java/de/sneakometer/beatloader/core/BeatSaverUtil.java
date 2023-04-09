@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -23,11 +23,38 @@ import lombok.AllArgsConstructor;
 public class BeatSaverUtil {
 	static Map<String, String> keyByHashCache = new HashMap<>();
 
-	public static String getKeyByHash(String hash) throws IOException {
-		if (keyByHashCache.containsKey(hash)) {
-			return keyByHashCache.get(hash);
+	/**
+	 * We use scoresaber to get a list of ranked songs we want. But to download them,
+	 * we need to use beatsaver, which only uses its own song-keys to download maps.
+	 * <p>
+	 * This requests all the songs keys by their hashes in chunks of 50.
+	 */
+	public static void fillInKeys(List<Song> songs) throws IOException {
+		long distinct = songs.stream().map(Song::getSongHash).distinct().count();
+		if(distinct != songs.size()){
+			// if it's not, we may end up requesting the same song twice
+			throw new IllegalStateException("Hashes must be unique!");
 		}
-		String url = "https://api.beatsaver.com/maps/hash/" + hash;
+		// fill in already known (cached) keys
+		for (Song song : songs) {
+			if (keyByHashCache.containsKey(song.songHash)) {
+				song.key = keyByHashCache.get(song.songHash);
+			}
+		}
+		// filter remaining songs without a key
+		List<Song> remainingSongs = songs.stream().filter(song -> song.key == null).toList();
+		if (remainingSongs.isEmpty()) {
+			return;
+		}
+		if (remainingSongs.size() > 50) {
+			fillInKeys(songs.subList(0, 50));
+			fillInKeys(songs.subList(50, songs.size()));
+			return;
+		}
+		String url = "https://api.beatsaver.com/maps/hash/" + String.join(",", remainingSongs.stream()
+				.map(Song::getSongHash)
+				.toList());
+		System.out.println("GET " + url);
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
@@ -39,19 +66,49 @@ public class BeatSaverUtil {
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
+		// the response differs when there are multiple hashes provided
+		if (remainingSongs.size() > 1) {
+			for (Song song : remainingSongs) {
+				String hash = song.songHash;
+				if (keyByHashCache.containsKey(hash)) {
+					throw new IllegalStateException("already containing key for song hash " + song.getSongHash() + " (song.key=" + song.key + ")");
+				}
+				JsonObject jsonObject = new JsonParser().parse(response.toString())
+						.getAsJsonObject().getAsJsonObject(hash.toLowerCase());
+				String key = jsonObject.getAsJsonPrimitive("id")
+						.getAsString();
 
-		JsonObject jsonObject = new JsonParser().parse(response.toString())
-				.getAsJsonObject();
-		String key = jsonObject.getAsJsonPrimitive("id")
-				.getAsString();
+				keyByHashCache.put(hash, key);
+				song.key = key;
+			}
+		} else {
+			Song song = remainingSongs.get(0);
+			String hash = song.songHash;
+			JsonObject jsonObject = new JsonParser().parse(response.toString())
+					.getAsJsonObject();
+			String key = jsonObject.getAsJsonPrimitive("id")
+					.getAsString();
+
+			keyByHashCache.put(hash, key);
+			song.key = key;
+		}
+
 		in.close();
+	}
 
-		keyByHashCache.put(hash, key);
-		return key;
+	public static <T> Stream<List<T>> batches(List<T> source, int length) {
+		if (length <= 0)
+			throw new IllegalArgumentException("length = " + length);
+		int size = source.size();
+		if (size <= 0)
+			return Stream.empty();
+		int fullChunks = (size - 1) / length;
+		return IntStream.range(0, fullChunks + 1).mapToObj(
+				n -> source.subList(n * length, n == fullChunks ? size : (n + 1) * length));
 	}
 
 	public static void downloadSongFiles(Song song, File fileTo) throws IOException {
-		Stream is = getStream(song);
+		DownloadStream is = getStream(song);
 		System.out.println("song hash=" + song.getSongHash() + " id=" + song.id + " key=" + song.key);
 
 		if (is == null) {
@@ -62,7 +119,7 @@ public class BeatSaverUtil {
 			}
 			is = getStream(song);
 			if (is == null) {
-				System.out.println("nah, just skipping");
+				System.out.println("Found no stream again. Skipping song...");
 				return;
 			}
 		}
@@ -111,18 +168,19 @@ public class BeatSaverUtil {
 		System.out.println(downloadedmb + "/" + totalmb + "mb (" + percentage + "%)");
 	}
 
-	public static Stream getStream(Song song) {
+	public static DownloadStream getStream(Song song) {
 		try {
 			String url = "https://beatsaver.com/api/download/key/" + song.key;
+			System.out.println("GET " + url);
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
-			con.setRequestProperty("User-Agent", "chrome");
+			// con.setRequestProperty("User-Agent", "chrome");
 			InputStream in = con.getInputStream();
 			if (in == null) {
 				return null;
 			}
-			return new Stream(con.getContentLength(), in);
+			return new DownloadStream(con.getContentLength(), in);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -130,18 +188,20 @@ public class BeatSaverUtil {
 	}
 
 	@AllArgsConstructor
-	static class Stream {
+	static class DownloadStream {
 		int size;
 		InputStream in;
 	}
 
 	public static void downloadSong(Song song, boolean replaceIfExist) throws IOException, InterruptedException {
-		song.key = getKeyByHash(song.getSongHash());
+		if (song.key == null) {
+			throw new IllegalStateException("Cannot download songs without a key.");
+		}
 		final String fileNameRegex = "[^A-Za-z0-9!+-., ]";
 		String dirName = song.key + " (" + song.getSongName()
 				.replaceAll(fileNameRegex, "") + " - "
 				+ song.getLevelAuthorName()
-						.replaceAll(fileNameRegex, "")
+				.replaceAll(fileNameRegex, "")
 				+ ")";
 		File path = new File(BeatLoader.SONGS_PATH + File.separator + dirName);
 
@@ -153,7 +213,6 @@ public class BeatSaverUtil {
 				System.out.println("Continue download...");
 			} else {
 				System.out.println("Song files already downloaded... Skipping");
-				Thread.sleep(500);
 				return;
 			}
 		}
@@ -163,6 +222,7 @@ public class BeatSaverUtil {
 			downloadSongFiles(song, path);
 		} catch (IOException e) {
 			System.out.println("Could not download song " + song.getSongName() + ": " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

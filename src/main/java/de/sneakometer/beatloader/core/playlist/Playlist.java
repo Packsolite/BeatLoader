@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
-	public String playlistTitle = "Ranked Songs";
-	public String playlistAuthor = "Sneakometer";
+	public String playlistTitle;
+	public String playlistAuthor;
+
+	public String playlistDescription;
 	public String image;
 	public int playlistSongCount;
 	public List<PlaylistSong> songs = new ArrayList<>();

@@ -47,7 +47,7 @@ public class BeatLoader {
 		return CompletableFuture.supplyAsync(() -> {
 			TOTAL_DOWNLOADED = 0;
 			specifyGameDir();
-			Collection<Song> songs = ScoreSaberUtil.getRankedSongs(minStars, maxStars);
+			List<Song> songs = ScoreSaberUtil.getRankedSongs(minStars, maxStars);
 
 			updateStatus("Found " + songs.size() + " songs");
 			BeatSaverUtil.deleteDoubles();
@@ -73,7 +73,15 @@ public class BeatLoader {
 		});
 	}
 
-	static void downloadSongs(Collection<Song> songs, PlayerData playerData, boolean redownloadAll) {
+	static void downloadSongs(List<Song> songs, PlayerData playerData, boolean redownloadAll) {
+		try {
+			updateStatus("Resolving beatmap keys...");
+			BeatSaverUtil.fillInKeys(songs);
+		} catch (IOException e) {
+			updateStatus("Failed resolving beatmap keys.");
+			throw new RuntimeException(e);
+		}
+
 		int i = 0;
 		for (Song song : songs) {
 			i++;
@@ -101,8 +109,8 @@ public class BeatLoader {
 	static void createPlaylist(Collection<Song> songs) throws IOException, URISyntaxException {
 		updateStatus("Generating Playlist...");
 		PlaylistGenerator playlistgen = new PlaylistGenerator();
-		Playlist playlist = playlistgen.generatePlayList("Ranked Songs", "Sneakometer", songs, Main.class.getResource("/image/rankedImage.png"));
-		playlistgen.savePlaylist(playlist, new File(PLAYLISTS_PATH + "\\RankedSongs.json"));
+		Playlist playlist = playlistgen.generatePlayList("Ranked Songs", "Sneakometer", "Playlist containing all the ranked songs.", songs, Main.class.getResource("/image/rankedImage.png"));
+		playlistgen.savePlaylist(playlist, new File(PLAYLISTS_PATH + "\\RankedSongs.bplist"));
 	}
 
 	static void specifyGameDir() {

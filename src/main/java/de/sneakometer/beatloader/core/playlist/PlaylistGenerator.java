@@ -20,35 +20,35 @@ import de.sneakometer.beatloader.core.Song;
 
 public class PlaylistGenerator {
 
-	public Playlist generatePlayList(String playlistName, String author, Collection<Song> songs, URL imageResource) throws IOException, URISyntaxException {
+	public Playlist generatePlayList(String playlistName, String author, String description, Collection<Song> songs, URL imageResource) throws IOException, URISyntaxException {
 		byte[] imageData = Files.readAllBytes(Paths.get(imageResource.toURI()));
-		return this.generatePlayList(playlistName, author, songs, imageData);
+		return this.generatePlayList(playlistName, author, description, songs, imageData);
 	}
 
-	public Playlist generatePlayList(String playlistName, String author, Collection<Song> songs, byte[] image) throws IOException {
+	public Playlist generatePlayList(String playlistName, String author, String description, Collection<Song> songs, byte[] image) throws IOException {
 		Playlist playlist = new Playlist();
 		playlist.playlistTitle = playlistName;
 		String encodedImage = new String(Base64.getEncoder()
 				.encode(image));
 		playlist.image = encodedImage;
 		playlist.playlistAuthor = author;
+		playlist.playlistDescription = description;
 
 		List<String> hashes = new ArrayList<String>();
 		songs.forEach(song -> {
 			if (hashes.contains(song.getId()))
 				return;
 
-			try {
-				PlaylistSong pls = new PlaylistSong();
-				pls.hash = song.getId();
-				pls.songName = song.getSongName();
-				pls.key = BeatSaverUtil.getKeyByHash(song.getId());
-				playlist.songs.add(pls);
+			System.out.println("Adding to playlist: " + song.toString());
 
-				hashes.add(song.getId());
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+			PlaylistSong pls = new PlaylistSong();
+			pls.hash = song.getSongHash();
+			pls.songName = song.getSongName();
+			// pls.key = BeatSaverUtil.getKeyByHash(song.getId());
+			pls.key = song.getKey();
+			playlist.songs.add(pls);
+
+			hashes.add(song.getId());
 		});
 
 		playlist.playlistSongCount = playlist.songs.size();
