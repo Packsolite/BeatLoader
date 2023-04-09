@@ -109,7 +109,7 @@ public class BeatLoader {
 	static void createPlaylist(Collection<Song> songs) throws IOException, URISyntaxException {
 		updateStatus("Generating Playlist...");
 		PlaylistGenerator playlistgen = new PlaylistGenerator();
-		Playlist playlist = playlistgen.generatePlayList("Ranked Songs", "Sneakometer", "Playlist containing all the ranked songs.", songs, Main.class.getResource("/image/rankedImage.png"));
+		Playlist playlist = playlistgen.generatePlayList("Ranked Songs", "Packsolite", "Playlist containing all the ranked songs.", songs, Main.class.getResource("/image/rankedImage.png"));
 		playlistgen.savePlaylist(playlist, new File(PLAYLISTS_PATH + "\\RankedSongs.bplist"));
 	}
 

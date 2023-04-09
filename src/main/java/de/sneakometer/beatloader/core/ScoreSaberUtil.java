@@ -1,9 +1,6 @@
 package de.sneakometer.beatloader.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.google.gson.JsonArray;
 
@@ -27,24 +24,21 @@ public class ScoreSaberUtil {
 			pageNum++;
 		}
 
-		// elemninate doubles
+		// sort by stars
+		songs.sort(Comparator.comparingDouble(Song::getStars));
+
+		Set<String> hashes = new HashSet<>();
+
+		// elemninate duplicate hashes
 		Iterator<Song> itr = songs.iterator();
 		while (itr.hasNext()){
 			Song song = itr.next();
-			boolean isDouble = false;
-			for(Song otherSong : songs) {
-				if (song == otherSong) continue;
-				if(song.songHash.equalsIgnoreCase(otherSong.songHash)) {
-					System.out.println("Found double songs in leaderboard: ");
-					System.out.println(song.toString());
-					System.out.println(otherSong.toString());
-					isDouble = true;
-				}
-			}
-			if(isDouble){
+			if(!hashes.add(song.songHash)){
+				System.out.println("Found duplicate hash in leaderboard: " + song.songHash);
 				itr.remove();
 			}
 		}
+
 		return songs;
 	}
 }
