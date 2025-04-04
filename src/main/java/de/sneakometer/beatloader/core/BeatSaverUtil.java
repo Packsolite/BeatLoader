@@ -20,6 +20,8 @@ import com.google.gson.JsonParser;
 
 import lombok.AllArgsConstructor;
 
+import static de.sneakometer.beatloader.core.BeatLoader.updateStatus;
+
 public class BeatSaverUtil {
 	static Map<String, String> keyByHashCache = new HashMap<>();
 
@@ -47,6 +49,12 @@ public class BeatSaverUtil {
 			return;
 		}
 		if (remainingSongs.size() > 50) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			updateStatus("Resolving keys (" + remainingSongs.size() + " remaining)");
 			fillInKeys(songs.subList(0, 50));
 			fillInKeys(songs.subList(50, songs.size()));
 			return;
